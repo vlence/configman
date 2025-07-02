@@ -1,35 +1,5 @@
 package configman
 
-// The type of a setting's value.
-type Type uint8
-
-const (
-        // 1 byte unsigned integer
-        Uint8   Type = 1
-        // 2 byte unsigned integer
-        Uint16  Type = 2
-        // 4 byte unsigned integer
-        Uint32  Type = 3
-        // 8 byte unsigned integer
-        Uint64  Type = 4
-        // 1 byte signed integer
-        Int8    Type = 5
-        // 2 byte signed integer
-        Int16   Type = 6
-        // 4 byte signed integer
-        Int32   Type = 7
-        // 8 byte signed integer
-        Int64   Type = 8
-        // 4 byte IEEE 754 single precision floating point number
-        Float32 Type = 9
-        // 8 byte IEEE 754 double precision floating point number
-        Float64 Type = 10
-        // boolean
-        Bool    Type = 11
-        // string
-        String  Type = 12
-)
-
 // A setting is a value with a name and optional description. The type
 // of the value, once set, cannot be changed. To use a value of a different
 // type create a new setting.
