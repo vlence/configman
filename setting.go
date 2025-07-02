@@ -1,59 +1,88 @@
 package configman
 
-import (
-        "fmt"
-
-        "github.com/vlence/gossert"
-)
-
-type ValueType uint8
+// The type of a setting's value.
+type Type uint8
 
 const (
-        Uint8   ValueType = 1
-        Uint16  ValueType = 2
-        Uint32  ValueType = 3
-        Uint64  ValueType = 4
-        Int8    ValueType = 5
-        Int16   ValueType = 6
-        Int32   ValueType = 7
-        Int64   ValueType = 8
-        Float32 ValueType = 9
-        Float64 ValueType = 10
-        Bool    ValueType = 11
+        // 1 byte unsigned integer
+        Uint8   Type = 1
+        // 2 byte unsigned integer
+        Uint16  Type = 2
+        // 4 byte unsigned integer
+        Uint32  Type = 3
+        // 8 byte unsigned integer
+        Uint64  Type = 4
+        // 1 byte signed integer
+        Int8    Type = 5
+        // 2 byte signed integer
+        Int16   Type = 6
+        // 4 byte signed integer
+        Int32   Type = 7
+        // 8 byte signed integer
+        Int64   Type = 8
+        // 4 byte IEEE 754 single precision floating point number
+        Float32 Type = 9
+        // 8 byte IEEE 754 double precision floating point number
+        Float64 Type = 10
+        // boolean
+        Bool    Type = 11
+        // string
+        String  Type = 12
 )
 
+// A setting is a value with a name and optional description. The type
+// of the value, once set, cannot be changed. To use a value of a different
+// type create a new setting.
+//
+// Settings can have descriptions. It is recommended to provide descriptions
+// for settings. Use descriptions to communicate what the setting's value is
+// meant to be used for and what kind of values should be stored.
+//
+// When a setting is no longer needed you can remove them. It is recommended
+// that settings are deprecated first with a deprecation reason. This gives
+// your users some time to update their apps before the setting is removed.
+// Once a setting is deprecated it cannot be reversed.
 type Setting struct {
-        ftype      ValueType
-        name       string
-        desc       string
-        value      any
-        deprecated bool
+        typ               Type
+        name              string
+        desc              string
+        value             any
+        deprecated        bool
+        deprecationReason string
 }
 
-func NewSetting(n string, t ValueType) *Setting {
-        return &Setting{name: n, ftype: t}
+// Deprecated returns true if this setting is deprecated
+func (s *Setting) Deprecated() bool {
+        return s.deprecated
 }
 
-func (f *Setting) Name() string {
-        return f.name
+// Name returns the name of this setting.
+func (s *Setting) Name() string {
+        return s.name
 }
 
-func (f *Setting) IsUint8() bool {
-        return f.ftype == Uint8
-}
-
-func (f *Setting) Uint8() uint8 {
-        v, ok := f.value.(uint8)
-        gossert.Ok(f.IsUint8() && ok, fmt.Sprintf("%s is not a Uint8 field", f.name))
-        return v
-}
-
-func (f *Setting) Set(v any) bool {
-        switch f.ftype {
-        case Uint8, Uint16:
-                f.value = v
-                return true
-        default:
-                return false
+// Description returns the current description of this setting.
+// If given a new description the current description will be
+// replaced and the new description will be returned.
+func (s *Setting) Description(newDesc ...string) (string, error) {
+        if len(newDesc) > 0 {
+                s.desc = newDesc[0]
         }
+
+        return s.desc, nil
+}
+
+// Deprecate marks this setting as deprecated. Once a setting has
+// been deprecated it cannot be reversed. Returns true if the
+// setting was deprecated successfully otherwise returns false
+// with an error. A deprecation reason can be provided optionally.
+// This function can also be used to update the deprecation reason.
+func (s *Setting) Deprecate(reason ...string) (bool, error) {
+        if len(reason) > 0 {
+                s.deprecationReason = reason[0]
+        }
+
+        s.deprecated = true
+
+        return true, nil
 }
