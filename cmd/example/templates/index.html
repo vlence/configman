@@ -1,0 +1,108 @@
+{{ define "title" }}
+Configman | The simplest way to manage your app's configuration
+{{ end }}
+
+{{ define "body" }}
+<div class="configs-section">
+        <h1>Configman</h1>
+
+        <p>The simplest way to manage your app's configuration.</p>
+
+        <h2>Your Configs</h2>
+
+        <form hx-post="configs/" hx-target="#configs" hx-swap="outerHTML">
+                <label>
+                        Name
+                        <input name="name" type="text" required>
+                </label>
+                <button type="submit">Create</button>
+        </form>
+
+        {{ template "configs" .Configs }}
+</div>
+
+<div class="settings-section"></div>
+
+<div class="setting-section"></div>
+{{ end }}
+
+{{ define "configs" }}
+<ol id="configs">
+        {{ range . }}
+        <li>
+                <a href="configs/{{ .Name }}/"
+                        hx-get="configs/{{ .Name }}/"
+                        hx-target=".settings-section"
+                        hx-swap="innerHTML">
+                        {{ .Name }}
+                </a>
+        </li>
+        {{ end }}
+</ol>
+{{ end }}
+
+{{ define "config" }}
+<h1>{{ .Name }}</h1>
+
+<form hx-patch="configs/{{ .Name }}/" hx-target="#config-desc" hx-swap="outerHTML">
+        {{ template "config-desc" . }}
+        <br>
+        <button>Update Description</button>
+</form>
+
+<form style="margin-top: 1em;">
+        <div>
+                <label>
+                        Name
+                        <input name="name" type="text" required>
+                </label>
+        </div>
+
+        <div>
+                <label>
+                        Type
+                        <select name="type" required>
+                                <option value="1">Unsigned 32-bit integer</option>
+                                <option value="2">Unsigned 64-bit integer</option>
+                                <option value="3">Signed 32-bit integer</option>
+                                <option value="4">Signed 64-bit integer</option>
+                                <option value="5">32-bit single precision IEEE 754 floating point number</option>
+                                <option value="6">64-bit double precision IEEE 754 floating point number</option>
+                                <option value="7">Boolean</option>
+                                <option value="8">String</option>
+                        </select>
+                </label>
+        </div>
+
+        <div>
+                <label>
+                        Value
+                        <input name="value" type="text" required>
+                </label>
+        </div>
+
+        <div>
+                <button>New Setting</button>
+        </div>
+</form>
+
+<h2>Settings</h2>
+
+{{ template "settings" .Settings }}
+{{ end }}
+
+{{ define "config-desc" }}
+<textarea id="config-desc" name="desc">{{ .Desc }}</textarea>
+{{ end }}
+
+{{ define "settings" }}
+<ol>
+        {{ range . }}
+        <li>
+                <a href="configs/{{ .Config.Name }}/{{ .Name }}/">
+                        {{ .Name }}
+                </a>
+        </li>
+        {{ end }}
+</ol>
+{{ end }}

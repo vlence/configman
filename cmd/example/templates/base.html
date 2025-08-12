@@ -1,11 +1,15 @@
+{{ define "base" }}
 <!DOCTYPE html>
 <html lang="en">
 <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{{ .Title }}</title>
+        <title>{{ template "title" . }}</title>
+        <script src="scripts/htmx.2.0.6.js"></script>
+        <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
-        {{ .Body }}
+        {{ template "body" . }}
 </body>
 </html>
+{{ end }}
