@@ -1,47 +1,43 @@
 package configman
 
-// A Setting is a named value. Settings do not exist on their own. You
-// need to create a Config first and then add settings to the config.
-type Setting interface {
-        // Name returns the name of this setting.
+import (
+        "time"
+        "github.com/vlence/gossert"
+)
+
+// Represents a name-value pair.
+type NamedValue interface {
+        // Name returns the name of the setting.
         Name() string
 
-        // Desc returns the description of this setting.
-        Desc() string
-
-        // Value returns the value of this setting. Use Type
-        // to find the type of the value.
-        Value() any
-
-        // SetValue sets the value of this setting. The value
-        // given must be the same type as the setting. If a
-        // value of a different type is given then ErrTypeMismatch
-        // is returned. Returns true if the value of this setting
-        // has been changed successfully.
-        SetValue(any) (bool, error)
-
-        // IsValidValue returns true if the given value can be set
-        // as this setting's value.
-        IsValidValue(any) bool
-
-        // Type returns the type of this setting's value.
+        // Type returns the type of the setting's value.
         Type() Type
 
-        // SetDesc sets the description of this setting. Returns true if
-        // the description was updated.
-        SetDesc(desc string) (bool, error)
+        // String returns the string representation of the setting's value.
+        String() string
+}
 
-        // Depr deprecates this setting. Returns true if the
-        // setting was deprecated. Deprecating an already
-        // deprecated setting does nothing and returns true.
-        Depr(reason string) (bool, error)
+// A name-value pair. T must conform to one of the Type values exported,
+// except Unsupported.
+type Setting[T any] struct {
+        hasName
+        hasDescription
+        canBeDeprecated
+        canBeCreated
+        canBeUpdated
 
-        // SetDeprReason sets the deprecation reason. Returns
-        // true if the deprecation reason was updated. If the
-        // setting is not deprecation it does nothing and
-        // returns false.
-        SetDeprReason(reason string) (bool, error)
+        typ Type
+        value T
+}
 
-        // Config returns the config that this setting belongs to.
-        Config() Config
+func (setting *Setting[T]) Type() Type {
+        gossert.Ok(nil != setting, "setting: cannot return type of nil setting")
+        return setting.typ
+}
+
+func (setting *Setting[T]) String() string {
+        gossert.Ok(nil != setting, "setting: cannot return string representation of nil setting")
+
+        // todo
+        return ""
 }

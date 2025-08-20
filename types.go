@@ -7,14 +7,12 @@ type Type uint8
 
 const (
         Unsupported Type = 0 // Unsupported data type
-        Uint32      Type = 1 // 4 byte unsigned integer
-        Uint64      Type = 2 // 8 byte unsigned integer
-        Int32       Type = 3 // 4 byte signed integer
-        Int64       Type = 4 // 8 byte signed integer
-        Float32     Type = 5 // 4 byte IEEE 754 single precision floating point number
-        Float64     Type = 6 // 8 byte IEEE 754 double precision floating point number
-        Bool        Type = 7 // boolean
-        String      Type = 8 // string
+        Int32       Type = 1 // 4 byte signed integer
+        Int64       Type = 2 // 8 byte signed integer
+        Float32     Type = 3 // 4 byte IEEE 754 single precision floating point number
+        Float64     Type = 4 // 8 byte IEEE 754 double precision floating point number
+        Bool        Type = 5 // boolean
+        String      Type = 6 // string
 )
 
 var ErrTypeMismatch = errors.New("configman: type of value does not match expected type")
@@ -23,10 +21,6 @@ var ErrUnsupportedType error = errors.New("configman: unknown or unsupported typ
 // TypeOf returns a Type value that represents the type of v.
 func TypeOf(v any) Type {
         switch v.(type) {
-        case uint32:
-                return Uint32
-        case uint64:
-                return Uint64
         case int32:
                 return Int32
         case int64:
