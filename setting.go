@@ -13,7 +13,7 @@ type NamedValue interface {
         // Type returns the type of the setting's value.
         Type() Type
 
-        // String returns the string representation of the setting's value.
+        // String returns the setting's value as a string.
         String() string
 }
 

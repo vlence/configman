@@ -11,8 +11,8 @@ type Config struct {
         hasName
         hasDescription
         canBeDeprecated
-        hasCreatedAtTimestamp
-        hasUpdatedAtTimestamp
+        canBeCreated
+        canBeUpdated
 
         settings []*Setting
 }

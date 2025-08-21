@@ -1,10 +1,13 @@
 package configman
 
 import (
+	"fmt"
 	"time"
 	"github.com/vlence/gossert"
 )
 
+// Embed this struct if your thing can be created. It is up to the
+// implementor how the thing is actually created.
 type canBeCreated {
 	createdAt time.Time
 	createdBy string
@@ -16,11 +19,14 @@ func (thing *canBeCreated) CreatedAt() time.Time {
 	return thing.createdAt
 }
 
+// CreatedBy returns the user who created this thing.
 func (thing *canBeCreated) CreatedBy() string {
 	gossert.Ok(nil != thing, "configman: cannot return name of creator of nil")
 	return thing.createdBy
 }
 
+// Embed this struct if your thing can be updated. How the thing is
+// updated is up to the implementor.
 type canBeUpdated {
 	updatedAt time.Time
 	updatedBy string
@@ -32,11 +38,13 @@ func (thing *canBeUpdated) UpdatedAt() time.Time {
 	return thing.updatedAt
 }
 
+// UpdatedBy returns the user who updated this thing.
 func (thing *canBeUpdated) UpdatedBy() string {
 	gossert.Ok(nil != thing, "configman: cannot return name of updater of nil")
 	return thing.updatedBy
 }
 
+// Embed this struct if your thing has a name.
 type hasName struct {
 	name string
 }
@@ -47,6 +55,7 @@ func (thing *hasName) Name() string {
 	return thing.name
 }
 
+// Embed this struct if your thing has a description.
 type hasDescription struct {
 	description string
 }
@@ -57,8 +66,7 @@ func (thing *hasDescription) Description() string {
 	return thing.description
 }
 
-// Represents anything that can be deprecated. It is up to the implementor
-// how exactly the thing is deprecated.
+// Embed this struct if your thing can be marked as deprecated.
 type canBeDeprecated struct {
 	deprecated bool
 	deprecatedAt time.Time
