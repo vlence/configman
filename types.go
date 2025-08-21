@@ -2,7 +2,7 @@ package configman
 
 import "errors"
 
-// The type of a setting's value.
+// Represents a valid data type of value that can be stored in a setting.
 type Type uint8
 
 const (
@@ -35,5 +35,25 @@ func TypeOf(v any) Type {
                 return String
         default:
                 return Unsupported
+        }
+}
+
+// String returns the name of the type as a string.
+func (t Type) String() string {
+        switch (t) {
+        case Int32:
+                return "int32"
+        case Int64:
+                return "int64"
+        case Float32:
+                return "float32"
+        case Float64:
+                return "float64"
+        case Bool:
+                return "bool"
+        case String:
+                return "string"
+        default:
+                return "unsupported"
         }
 }
